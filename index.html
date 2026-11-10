@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALT → NEU · Karl Johan heute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff3dc;
+  --paper:#ffffff;
+  --ink:#111111;
+  --ink-dim:#3a3a3a;
+  --yellow:#ffd23f;   /* Laternen- / Fensterlicht */
+  --green:#b8f08c;    /* Munchs blassgrüne Gesichter */
+  --blue:#8fb3ff;     /* Abendhimmel */
+  --pink:#ff8fb8;
+  --red:#ff6b4a;
+  --b:3px solid var(--ink);
+  --sh:6px 6px 0 var(--ink);
+  --sh-sm:4px 4px 0 var(--ink);
+  --display:'Archivo Black', 'Arial Black', sans-serif;
+  --sans:'Space Grotesk', system-ui, sans-serif;
+  --mono:'Space Mono', ui-monospace, monospace;
+  --ratio: 5496 / 3672;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.55;
+  background-image:radial-gradient(var(--ink) 1px, transparent 1px);
+  background-size:22px 22px;background-position:-11px -11px;
+  background-color:var(--bg);
+}
+body::before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.86;z-index:-1}
+img{display:block;max-width:100%}
+a{color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);font-weight:700}
+
+/* ---------- Header ---------- */
+header.top{position:sticky;top:0;z-index:20;background:var(--yellow);border-bottom:var(--b)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+header.top b{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.02em}
+header.top b span{display:inline-block;background:var(--ink);color:var(--yellow);padding:0 6px;margin:0 2px}
+nav{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;white-space:nowrap;
+  border:var(--b);background:var(--paper);padding:5px 12px;box-shadow:3px 3px 0 var(--ink);transition:transform .1s, box-shadow .1s}
+nav a:hover{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+
+/* ---------- Hero ---------- */
+.hero{padding:56px 0 28px}
+.hero .wrap > .mono{display:inline-block;background:var(--pink);border:var(--b);padding:4px 10px;box-shadow:var(--sh-sm);transform:rotate(-1.5deg)}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,7.4vw,96px);line-height:1;letter-spacing:-.01em;margin:26px 0 22px;text-transform:uppercase}
+.hero h1 em{font-style:normal;background:var(--yellow);border:var(--b);padding:0 .12em;box-shadow:var(--sh);display:inline-block;transform:rotate(1.5deg)}
+.hero p.lead{max-width:680px;font-size:19px;margin:0;font-weight:500;background:var(--paper);border:var(--b);padding:16px 20px;box-shadow:var(--sh)}
+.meta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.meta-row div{display:flex;flex-direction:column;border:var(--b);background:var(--paper);padding:8px 14px;box-shadow:var(--sh-sm)}
+.meta-row div:nth-child(1){background:var(--green)}
+.meta-row div:nth-child(2){background:var(--blue)}
+.meta-row div:nth-child(3){background:var(--yellow)}
+.meta-row div span:last-child{font-weight:700;font-size:17px}
+
+/* ---------- Stage ---------- */
+.stage-section{padding:28px 0 80px}
+.viewport{perspective:1800px;perspective-origin:50% 40%;position:relative;
+  border:var(--b);box-shadow:10px 10px 0 var(--ink);background:var(--ink)}
+.stack{position:relative;width:100%;aspect-ratio:var(--ratio);transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.2,.7,.2,1);background:#05070c}
+.stack .layer{position:absolute;pointer-events:none;
+  transition:opacity .4s ease, transform .9s cubic-bezier(.2,.7,.2,1), filter .4s ease;will-change:transform,opacity}
+.stack .layer img{width:100%;height:100%}
+.stack .layer.off{opacity:0}
+.stack .layer.new{filter:drop-shadow(0 0 0 var(--yellow)) drop-shadow(4px 0 0 var(--yellow)) drop-shadow(-4px 0 0 var(--yellow)) drop-shadow(0 -4px 0 var(--yellow))}
+.stack.solo .layer.dim{opacity:.12}
+.viewport.explode{background:var(--blue)}
+.viewport.explode .stack{transform:rotateX(10deg) rotateY(-32deg) scale(.74);background:transparent}
+.viewport.explode .stack .layer{outline:3px solid var(--ink);outline-offset:-3px}
+.viewport.explode .stack .layer:first-child{box-shadow:8px 8px 0 var(--ink)}
+.vignette{display:none}
+
+.counter{position:absolute;left:14px;bottom:14px;z-index:5;font-family:var(--mono);font-weight:700;font-size:13px;
+  background:var(--yellow);color:var(--ink);padding:6px 10px;border:var(--b);box-shadow:var(--sh-sm)}
+.counter strong{background:var(--ink);color:var(--yellow);padding:0 4px}
+
+.controls{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;margin-top:28px;
+  padding:16px 18px;background:var(--paper);border:var(--b);box-shadow:var(--sh)}
+.btn{appearance:none;border:var(--b);background:var(--paper);color:var(--ink);font:700 15px var(--sans);
+  padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  box-shadow:var(--sh-sm);transition:transform .08s, box-shadow .08s}
+#play{background:var(--green)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn:active,.btn[aria-pressed="true"]{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+.btn[aria-pressed="true"]{background:var(--pink)}
+.btn svg{width:16px;height:16px}
+.btn-group{display:flex;gap:10px}
+
+.slider-wrap{position:relative}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:pointer;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:16px;border:var(--b);
+  background:linear-gradient(90deg,var(--yellow) var(--p,0%),var(--paper) var(--p,0%))}
+input[type=range]::-moz-range-track{height:10px;border:var(--b);background:var(--paper)}
+input[type=range]::-moz-range-progress{height:10px;background:var(--yellow)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;background:var(--pink);
+  border:var(--b);margin-top:-9px;box-shadow:3px 3px 0 var(--ink)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:0;background:var(--pink);border:var(--b)}
+input[type=range]:focus-visible{outline:3px dashed var(--ink);outline-offset:4px}
+.ticks{display:flex;justify-content:space-between;padding:0 12px;margin-top:4px}
+.ticks span{width:3px;height:8px;background:var(--ink)}
+.hint{margin-top:16px;font-size:14px;font-weight:500;color:var(--ink-dim)}
+
+.strip{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin-top:24px}
+.chip{position:relative;aspect-ratio:3/4;background:var(--paper);border:var(--b);cursor:pointer;overflow:hidden;padding:0;
+  display:flex;align-items:flex-end;justify-content:center;box-shadow:var(--sh-sm);transition:transform .08s, box-shadow .08s, background .15s}
+.chip img{width:86%;height:86%;object-fit:contain;object-position:bottom}
+.chip.bg img{width:100%;height:100%;object-fit:cover}
+.chip .n{position:absolute;top:0;left:0;font-family:var(--mono);font-weight:700;font-size:11px;background:var(--ink);color:var(--paper);padding:1px 5px;z-index:1}
+.chip.on{background:var(--yellow)}
+.chip:not(.on){transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);background:#e9e1cf}
+.chip:not(.on) img{opacity:.35;filter:grayscale(1)}
+.chip:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+
+/* ---------- Sections ---------- */
+section.block{padding:88px 0;border-top:var(--b)}
+#vergleich{background:var(--blue)}
+#prozess{background:var(--bg)}
+.sec-head{display:grid;grid-template-columns:200px 1fr;gap:32px;margin-bottom:44px;align-items:start}
+.sec-head .mono{display:inline-block;width:max-content;background:var(--ink);color:var(--paper);padding:5px 10px}
+.sec-head h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,60px);line-height:1;margin:0;text-transform:uppercase}
+.sec-head p{max-width:620px;margin:14px 0 0;font-weight:500}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.compare figure{margin:0;background:var(--paper);border:var(--b);box-shadow:var(--sh);padding:12px}
+.compare .frame{aspect-ratio:1.45;overflow:hidden;border:var(--b);background:#05070c}
+.compare .frame img{width:100%;height:100%;object-fit:cover}
+.compare figcaption{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.compare figcaption .t{font-weight:700;font-size:20px}
+.compare figcaption .t i{font-style:normal;color:var(--ink-dim)}
+.tag{display:inline-block;font-family:var(--display);font-size:14px;padding:2px 10px;border:var(--b);width:max-content;box-shadow:3px 3px 0 var(--ink)}
+.tag.alt{background:var(--green)}
+.tag.neu{background:var(--yellow)}
+
+.wipe{margin-top:32px;position:relative;aspect-ratio:1.45;overflow:hidden;user-select:none;touch-action:pan-y;cursor:ew-resize;
+  border:var(--b);box-shadow:10px 10px 0 var(--ink)}
+.wipe img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wipe .top{clip-path:inset(0 calc(100% - var(--x,50%)) 0 0)}
+.wipe .bar{position:absolute;top:0;bottom:0;left:var(--x,50%);width:4px;background:var(--ink);transform:translateX(-2px)}
+.wipe .bar::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;
+  background:var(--pink);border:var(--b);box-shadow:3px 3px 0 var(--ink);color:var(--ink);display:grid;place-items:center;font-size:22px;font-weight:700}
+.wipe .lbl{position:absolute;top:12px;font-family:var(--display);font-size:13px;padding:3px 9px;border:var(--b);box-shadow:3px 3px 0 var(--ink)}
+.wipe .lbl.l{left:12px;background:var(--green)} .wipe .lbl.r{right:16px;background:var(--yellow)}
+
+.table{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.col{background:var(--paper);border:var(--b);box-shadow:var(--sh);padding:0 0 18px}
+.col h3{margin:0 0 12px;font:400 17px var(--display);text-transform:uppercase;padding:12px 18px;border-bottom:var(--b)}
+.col.a h3{background:var(--green)} .col.b h3{background:var(--yellow)} .col.c h3{background:var(--red)}
+.col ul{margin:0;padding:0 18px 0 36px} .col li{margin:8px 0}
+.col li b{font-weight:700}
+
+.steps{display:flex;flex-direction:column;gap:28px}
+.step{display:grid;grid-template-columns:180px 1fr;gap:0;border:var(--b);background:var(--paper);box-shadow:var(--sh)}
+.step > div:last-child{padding:24px 28px}
+.step .num{font-family:var(--display);font-size:64px;line-height:1;padding:22px;border-right:var(--b);background:#e9e1cf}
+.step.done .num{background:var(--yellow)}
+.step .num small{display:inline-block;font-family:var(--mono);font-weight:700;font-size:11px;text-transform:uppercase;margin-top:12px;
+  background:var(--ink);color:var(--paper);padding:2px 8px}
+.step h3{font-family:var(--display);font-weight:400;font-size:26px;margin:0 0 6px;text-transform:uppercase;line-height:1.1}
+.step .q{color:var(--ink-dim);font-size:15px;margin:0 0 18px;max-width:680px}
+.step h4{font:700 13px var(--mono);text-transform:uppercase;margin:22px 0 8px;display:inline-block;background:var(--pink);border:2px solid var(--ink);padding:2px 8px}
+.step h4 + ul{margin-top:0}
+.step ul{margin:0;padding-left:20px}
+.step li{margin:4px 0}
+.step li::marker{content:"■  ";font-size:.7em}
+.step li ul{margin-top:4px}
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:8px}
+.facts div{border:var(--b);background:var(--bg);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.facts div span:last-child{font-weight:700}
+.facts .mono{font-size:11px}
+.note{margin:0 0 14px;max-width:720px;font-size:17px;padding-left:16px;border-left:6px solid var(--yellow)}
+.altneu{width:100%;border-collapse:collapse;border:var(--b);box-shadow:var(--sh-sm);background:var(--paper)}
+.altneu th{font:400 14px var(--display);text-align:left;padding:8px 14px;border:var(--b)}
+.altneu th.alt{background:var(--green)} .altneu th.neu{background:var(--yellow)}
+.altneu td{padding:10px 14px;border:var(--b);vertical-align:top;width:50%}
+.pimg{margin:0 0 20px;border:var(--b);box-shadow:var(--sh-sm);background:var(--ink)}
+.pimg figcaption,.versus figcaption{background:var(--paper);border-top:var(--b);padding:6px 12px;font:700 13px var(--mono);text-transform:uppercase}
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.versus figure{margin:0;position:relative;border:var(--b);box-shadow:var(--sh-sm);background:var(--ink)}
+.versus .vtag{position:absolute;top:10px;left:10px;font:400 13px var(--display);text-transform:uppercase;padding:3px 9px;border:var(--b);box-shadow:3px 3px 0 var(--ink)}
+.versus .c .vtag{background:var(--red)} .versus .b .vtag{background:var(--yellow)}
+.versus .c img{filter:none}
+@media (max-width:600px){.versus{grid-template-columns:1fr}}
+.zoom-btn{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  font:700 13px var(--sans);background:var(--paper);color:var(--ink);border:var(--b);padding:5px 10px;
+  box-shadow:3px 3px 0 var(--ink);transition:transform .08s, box-shadow .08s}
+.zoom-btn svg{width:16px;height:16px}
+.zoom-btn:hover{background:var(--yellow)}
+.zoom-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(17,17,17,.92);display:none;flex-direction:column;padding:16px;gap:12px}
+.lb.open{display:flex}
+.lb:focus{outline:none}
+.lb-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lb-bar .vtag{position:static;font:400 14px var(--display);text-transform:uppercase;padding:4px 10px;border:var(--b);border-color:var(--paper);box-shadow:3px 3px 0 var(--paper)}
+.lb-bar .vtag.c{background:var(--red)} .lb-bar .vtag.b{background:var(--yellow)}
+.lb-cap{color:var(--paper);font:700 14px var(--mono);text-transform:uppercase;margin-right:auto}
+.lb .btn{box-shadow:3px 3px 0 var(--paper);border-color:var(--paper)}
+.lb-view{flex:1;min-height:0;position:relative;overflow:hidden;border:3px solid var(--paper);background:#000;cursor:zoom-in;touch-action:none}
+.lb-view.zoomed{cursor:grab}
+.lb-view.dragging{cursor:grabbing}
+.lb-view img{position:absolute;left:50%;top:50%;max-width:100%;max-height:100%;transform-origin:center;
+  transform:translate(-50%,-50%) translate(var(--tx,0px),var(--ty,0px)) scale(var(--s,1));transition:transform .2s ease;user-select:none;-webkit-user-drag:none}
+.lb-view.dragging img{transition:none}
+.lb-hint{color:#bbb;font-size:13px;text-align:center}
+.pending{border:3px dashed var(--ink);padding:14px 16px;font-weight:700;background:repeating-linear-gradient(45deg,#fff,#fff 10px,#f4ecd9 10px,#f4ecd9 20px)}
+
+footer{padding:36px 0;border-top:var(--b);background:var(--ink);color:var(--paper);font-weight:500}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer a{color:var(--ink);background:var(--yellow);border:3px solid var(--paper);padding:8px 14px;text-decoration:none;font-weight:700;box-shadow:4px 4px 0 var(--paper)}
+footer a:hover{transform:translate(4px,4px);box-shadow:0 0 0 var(--paper)}
+
+@media (max-width:860px){
+  .sec-head{grid-template-columns:1fr;gap:12px}
+  .step{grid-template-columns:1fr}
+  .step .num{border-right:none;border-bottom:var(--b);font-size:44px;display:flex;align-items:center;gap:14px;padding:14px 20px}
+  .step .num small{margin-top:0}
+  .step > div:last-child{padding:20px}
+  .compare,.table{grid-template-columns:1fr}
+  .strip{grid-template-columns:repeat(6,1fr)}
+  .controls{grid-template-columns:1fr}
+  .btn-group{justify-content:space-between}
+  nav{display:none}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  .viewport,.wipe{box-shadow:6px 6px 0 var(--ink)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <b>ALT <span>→</span> NEU</b>
+    <nav>
+      <a href="#werk">Werk</a>
+      <a href="#vergleich">Vergleich</a>
+      <a href="#prozess">Prozess</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="mono">Kunst Q1 · Inszenierte Fotografie · nach Edvard Munch</div>
+      <h1 id="work-title"></h1>
+      <p class="lead" id="work-lead"></p>
+      <div class="meta-row" id="meta-row"></div>
+    </div>
+  </section>
+
+  <section class="stage-section" id="werk">
+    <div class="wrap">
+      <div class="viewport" id="viewport">
+        <div class="stack" id="stack"></div>
+        <div class="vignette"></div>
+        <div class="counter" id="counter"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="play" aria-label="Abspielen">
+          <svg viewBox="0 0 16 16" fill="currentColor" id="play-ico"><path d="M4 2.5v11l9-5.5z"/></svg>
+          <span id="play-txt">Abspielen</span>
+        </button>
+        <div class="slider-wrap">
+          <input type="range" id="slider" min="0" max="11" step="1" value="11" aria-label="Anzahl sichtbarer Ebenen">
+          <div class="ticks" id="ticks"></div>
+        </div>
+        <div class="btn-group">
+          <button class="btn" id="explode" aria-pressed="false" title="Ebenen räumlich auffächern">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 5l6-3 6 3-6 3z"/><path d="M2 8l6 3 6-3" opacity=".7"/><path d="M2 11l6 3 6-3" opacity=".45"/></svg>
+            3D
+          </button>
+          <button class="btn" id="solo" aria-pressed="false" title="Nur die zuletzt hinzugefügte Ebene hervorheben">Solo</button>
+        </div>
+      </div>
+      <div class="strip" id="strip"></div>
+      <p class="hint">Schieb den Regler oder nutz die Pfeiltasten ← →, um die Ebenen nacheinander aufzubauen. „3D“ fächert den Stapel räumlich auf, „Solo“ hebt die oberste Ebene hervor.</p>
+    </div>
+  </section>
+
+  <section class="block" id="vergleich">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="mono">C · Bildvergleich</div>
+        <div>
+          <h2>ALT ↔ NEU</h2>
+          <p>Das historische Gemälde und die eigene Fotografie im direkten Vergleich. Mit dem Regler im Bild lassen sich beide übereinanderschieben.</p>
+        </div>
+      </div>
+
+      <div class="compare">
+        <figure>
+          <div class="frame"><img src="assets/munch.jpg" alt="Edvard Munch, Abend auf der Karl Johans gate, 1892"></div>
+          <figcaption>
+            <span class="tag alt">ALT</span>
+            <span class="t" id="cap-alt"></span>
+            <span class="mono" id="cap-alt-meta"></span>
+          </figcaption>
+        </figure>
+        <figure>
+          <div class="frame"><img src="assets/final.jpg" alt="Eigene inszenierte Fotografie, 2026"></div>
+          <figcaption>
+            <span class="tag neu">NEU</span>
+            <span class="t" id="cap-neu"></span>
+            <span class="mono" id="cap-neu-meta"></span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="wipe" id="wipe">
+        <img src="assets/final.jpg" alt="">
+        <img class="top" src="assets/munch.jpg" alt="">
+        <div class="bar"></div>
+        <span class="lbl l">ALT · 1892</span><span class="lbl r">NEU · 2026</span>
+      </div>
+
+      <div class="table" id="cmp-table"></div>
+    </div>
+  </section>
+
+  <section class="block" id="prozess">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="mono">D · E · Prozess</div>
+        <div>
+          <h2>Vom Gemälde zum Foto</h2>
+          <p>Die sechs Arbeitsschritte mit Recherche, Analyse und Entscheidungen.</p>
+        </div>
+      </div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span id="foot-l"></span>
+    <a href="assets/final_full.jpg" download>Finales Bild in voller Auflösung ↓</a>
+  </div>
+</footer>
+
+<div class="lb" id="lb" tabindex="-1" role="dialog" aria-modal="true" aria-label="Bild vergrößert">
+  <div class="lb-bar">
+    <span class="vtag" id="lb-tag"></span>
+    <span class="lb-cap" id="lb-cap"></span>
+    <button class="btn" id="lb-swap" title="Zwischen den Bildern wechseln (Leertaste)">⇄ Wechseln</button>
+    <button class="btn" id="lb-out" aria-label="Herauszoomen">−</button>
+    <button class="btn" id="lb-in" aria-label="Hineinzoomen">+</button>
+    <button class="btn" id="lb-close" aria-label="Schließen">✕</button>
+  </div>
+  <div class="lb-view" id="lb-view"><img id="lb-img" alt=""></div>
+  <div class="lb-hint">Klick ins Bild zum Zoomen · Ziehen zum Verschieben · Mausrad zoomt · Leertaste wechselt bei gleichem Ausschnitt · Esc schließt</div>
+</div>
+
+<script>
+/* =========================================================
+   INHALT – hier kann alles angepasst werden
+   ========================================================= */
+const WORK = {
+  title: 'Abend am <em>Blumenpfad</em>',
+  year: 2026,
+  author: 'Niklas',
+  lead: 'Ein Selbstporträt als Menge: Zwölf Aufnahmen derselben Person, in GIMP zu einer Gruppe zusammengesetzt, die frontal auf die Betrachtenden zukommt. Eine Übersetzung von Munchs „Abend auf der Karl Johans gate“ in die Gegenwart.',
+  medium: 'Inszenierte Fotografie, digitale Montage aus 12 Ebenen'
+};
+
+const ORIGINAL = {
+  title: 'Abend auf der Karl Johans gate',
+  artist: 'Edvard Munch (1863–1944)',
+  year: 1892,
+  details: 'Öl auf ungrundierter Leinwand · ca. 84,5 × 121 cm · Kunstmuseum Bergen'
+};
+
+/* Ebenen von unten nach oben (aus GIMP exportiert) */
+const LAYERS = [
+  {file:'assets/layers/00.jpg', x:0, y:0, w:1, h:1, src:'DSC06034_raw-denoise (1).png'},
+  {file:'assets/layers/01.webp', x:0.498, y:0.26934, w:0.0806, h:0.35485, src:'DSC06081_raw-denoise.png'},
+  {file:'assets/layers/02.webp', x:0.44669, y:0.30419, w:0.09225, h:0.38971, src:'DSC06087_raw-denoise.png'},
+  {file:'assets/layers/03.webp', x:0.41521, y:0.29139, w:0.11281, h:0.51389, src:'DSC06098_raw-denoise.png'},
+  {file:'assets/layers/04.webp', x:0.50346, y:0.32816, w:0.07769, h:0.32435, src:'DSC06034_raw-denoise_2.png'},
+  {file:'assets/layers/05.webp', x:0.52747, y:0.31509, w:0.07769, h:0.32435, src:'DSC06034_raw-denoise.png'},
+  {file:'assets/layers/06.webp', x:0.39811, y:0.41149, w:0.12518, h:0.51906, src:'DSC06152_raw-denoise.png'},
+  {file:'assets/layers/07.webp', x:0.53221, y:0.26634, w:0.13028, h:0.59014, src:'DSC06057_raw-denoise.png'},
+  {file:'assets/layers/08.webp', x:0.56023, y:0.22821, w:0.15156, h:0.38317, src:'DSC06062_raw-denoise_2.png'},
+  {file:'assets/layers/09.webp', x:0.31095, y:0.24646, w:0.31041, h:0.75354, src:'DSC06164_raw-denoise.png'},
+  {file:'assets/layers/10.webp', x:0.59207, y:0.17729, w:0.18868, h:0.82271, src:'DSC06066_raw-denoise.png'},
+  {file:'assets/layers/11.webp', x:0.27493, y:0.15523, w:0.20233, h:0.84477, src:'DSC06114_raw-denoise.png'}
+];
+
+/* ALT ↔ NEU – ENTWURF, bitte prüfen und in eigenen Worten anpassen */
+const COMPARE = {
+  aufgegriffen: [
+    '<b>Frontale Menge:</b> Die Gruppe läuft direkt auf die Betrachtenden zu.',
+    '<b>Gleichförmigkeit:</b> Alle Figuren tragen dieselbe dunkle Kleidung und haben denselben starren Blick.',
+    '<b>Abendlicht:</b> Blaue Dämmerung, dazu eine einzelne warme Lichtquelle.',
+    '<b>Enge:</b> Der schmale Gehweg zwischen Auto und Zaun blockiert den Raum.'
+  ],
+  veraendert: [
+    '<b>Masse aus einer Person:</b> Statt vieler Fremder zeigt das Bild immer denselben Menschen.',
+    '<b>Ort:</b> Statt eines Boulevards ein gewöhnlicher Gehweg von heute.',
+    '<b>Licht:</b> Eine Straßenlaterne ersetzt die erleuchteten Fenster.',
+    '<b>Medium:</b> Digitale Montage statt Ölmalerei.'
+  ],
+  verworfen: [
+    '<b>Einzelgänger rechts:</b> Gibt es ihn im eigenen Bild? Begründung ergänzen.',
+    '<b>Verfremdete Gesichter:</b> Ein Effekt auf den Gesichtern wurde ausprobiert, ohne wirkte das Bild aber besser. Stattdessen sind die Gesichter teilweise unscharf.'
+  ]
+};
+
+/* Arbeitsschritte – aus den Obsidian-Notizen */
+const STEPS = [
+  {
+    n:1, title:'Werk auswählen & recherchieren',
+    q:'Künstler, Titel, Jahr, Entstehungskontext und Bedeutung. Komposition, Figuren, Raum, Licht, Farbe, Perspektive.',
+    facts:[
+      ['Maler','Edvard Munch (1863–1944)'],
+      ['Titel','Abend auf der Karl Johans gate'],
+      ['Jahr','1892'],
+      ['Technik','Öl auf ungrundierter Leinwand'],
+      ['Maße','ca. 84,5 × 121 cm'],
+      ['Ort','Karl Johans gate, Kristiania (heute Oslo)'],
+      ['Stil','Symbolismus; wichtiges Vorläuferwerk des Expressionismus'],
+      ['Sammlung','Kunstmuseum Bergen']
+    ],
+    sections:[
+      ['Entstehungskontext',[
+        'Munch hielt in Notizen fest, dass ihm Menschen auf der Straße seltsam vorkamen. Sie schienen ihn anzustarren und lösten bei ihm körperliche Unruhe und Leere aus.'
+      ]],
+      ['Bedeutung',[
+        'Die Menschenmenge steht für Anonymität und gesellschaftlichen Druck.',
+        'Die Menschen sind trotz ihrer Mitmenschen einsam.'
+      ]],
+      ['Komposition und Bildausschnitt',[
+        'Eine dichte Menschenmenge kommt frontal auf die Betrachtenden zu.',
+        'Die Menge nimmt die gesamte linke und mittlere Bildhälfte ein.',
+        'Die Straße wirkt dadurch überfüllt und eng.',
+        'Rechts geht eine <b>einzelne</b> dunkle Gestalt von der Menge weg.'
+      ]],
+      ['Figuren, Gestik und Mimik',[
+        'Die Personen wirken nicht als Individuen, sondern als gleichförmige Masse.',
+        'Ihre Gesichter sind blass, gelblich-grün und maskenhaft.',
+        'Die Augen sind groß, dunkel und starr.',
+        'Die Mimik ist kaum erkennbar; das wirkt unheimlich und leblos.'
+      ]],
+      ['Raum und Perspektive',[
+        'Straße und Häuserfront links laufen diagonal in die Tiefe.',
+        ['Die Perspektive zieht den Blick in den Hintergrund, aber die Menge blockiert den Weg im Vordergrund.',
+          ['Dadurch wirkt der Raum eingeengt.']]
+      ]],
+      ['Licht und Farbe',[
+        'Abendstimmung.',
+        'Warmes Fensterlicht steht im Kontrast zum dunkelblauen Himmel.',
+        'Die unnatürlichen Gesichtsfarben erzeugen ein Gefühl von Krankheit und Abnormalität.'
+      ]]
+    ]
+  },
+  {
+    n:2, title:'Aussage verstehen',
+    q:'Was erzählt oder thematisiert das Bild? Welche Wirkung erzeugt es? Welche Themen der Zeit werden sichtbar?',
+    sections:[
+      ['Was erzählt das Bild?',[
+        'Das Gefühl der Großstadt.',
+        'Die Menschen wirken anonym und haben kaum Verbindung zueinander.',
+        'Die einzelne Gestalt rechts steht für Einsamkeit oder Außenseitertum.'
+      ]],
+      ['Welche Wirkung erzeugt es?',[
+        'Es wirkt unruhig, düster und bedrohlich.',
+        'Die blassen, maskenhaften Gesichter wirken unheimlich.'
+      ]],
+      ['Welche Themen der Zeit werden sichtbar?',[
+        'Um 1900 wachsen die Städte durch die Industrialisierung stark.',
+        'Die Stadt ist kein Ort der Gemeinschaft, sondern ein Ort der Isolation.',
+        'Anonymität und fehlende Vielfalt.'
+      ]]
+    ]
+  },
+  {
+    n:3, title:'Brücke zur Gegenwart',
+    q:'Was könnte die Grundidee heute bedeuten? Bezug zur eigenen Lebenswelt.',
+    text:[
+      'Die Gesichter der Menschen in Munchs Gemälde sehen für mich maskenhaft aus; für mich schwindet die Individualität in dem Bild. Deshalb möchte ich mich in meinem Bild ganz häufig einfügen, um keine Individualität mehr zu haben.',
+      'Bei mir merke ich häufig, dass ich mich auch aus sozialem Druck mit dem Strom bewege. Man verhält sich anders, als man es eigentlich machen würde, um nicht komisch zu wirken, und probiert nichts Neues aus, um nicht aufzufallen.'
+    ]
+  },
+  {
+    n:4, title:'Bildkonzept planen',
+    q:'Ort, Personen, Kleidung, Requisiten, Gestik/Mimik, Perspektive, Komposition, Licht, geplante Bearbeitung, Skizzen.',
+    image:{src:'assets/process/zwischenstand.jpg', cap:'Zwischenstand der Montage'},
+    table:[
+      ['Promenade in Oslo', 'Straße in einem Wohngebiet, auch damit niemand ins Bild kommt'],
+      ['Viele ganz leicht unterschiedliche Personen', 'Ich selbst, ganz häufig kopiert'],
+      ['Gruselige Gesichter', 'Teilweise unscharfe Gesichter'],
+      ['Kleidung: Anzug usw.', 'Moderne, lockere Straßenkleidung'],
+      ['Licht: dunkel, Abend', 'Licht: dunkel, Abend'],
+      ['Gestik: starres, emotionsloses Gesicht', 'Gestik: starres, emotionsloses Gesicht']
+    ],
+    after:'Während der Nachbearbeitung habe ich mit einem Effekt auf den Gesichtern experimentiert, fand das Bild ohne Effekt aber besser.',
+    versus:[
+      {src:'assets/process/gesicht-effekt.jpg', tag:'Verworfen', cls:'c', cap:'Mit Gesichtseffekt'},
+      {src:'assets/final.jpg', tag:'Gewählt', cls:'b', cap:'Ohne Effekt'}
+    ]
+  },
+  {
+    n:5, title:'Erproben & inszenieren',
+    q:'Probeaufnahmen, Varianten, bewusste Veränderungen von Licht, Perspektive, Abstand und Haltung.',
+    after:'Bei den ersten Probeaufnahmen war die Straßenlaterne noch aus. Außerdem bin ich auf diesem Bild zu breit gelaufen.',
+    versus:[
+      {src:'assets/process/probe-laterne-aus.jpg', tag:'Probe', cls:'c', cap:'Laterne aus · zu breit gelaufen'},
+      {src:'assets/final.jpg', tag:'Final', cls:'b', cap:'Laterne an'}
+    ]
+  },
+  {
+    n:6, title:'Auswählen & bearbeiten',
+    q:'Stärkste Aufnahme wählen und gezielt bearbeiten: Montage der 12 Ebenen in GIMP.',
+    after:'Beim Freistellen war in der alten Version noch ein Stück einer Hand zu sehen.',
+    versus:[
+      {src:'assets/process/freistellung-alt.jpg', tag:'Alt', cls:'c', cap:'Mit Rest einer Hand'},
+      {src:'assets/process/freistellung-neu.jpg', tag:'Neu', cls:'b', cap:'Sauber freigestellt'}
+    ]
+  }
+];
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => s; // Inhalte sind eigene, vertrauenswürdige Texte (HTML erlaubt)
+
+$('#work-title').innerHTML = `${WORK.title}, ${WORK.year}`;
+$('#work-lead').textContent = WORK.lead;
+$('#meta-row').innerHTML = [
+  ['Vorlage', `${ORIGINAL.artist.split(' (')[0]}, ${ORIGINAL.year}`],
+  ['Technik', WORK.medium],
+  ['Ebenen', LAYERS.length]
+].map(([k,v]) => `<div><span class="mono">${k}</span><span>${v}</span></div>`).join('');
+
+$('#cap-alt').innerHTML = `${ORIGINAL.title}, <i>${ORIGINAL.year}</i>`;
+$('#cap-alt-meta').textContent = ORIGINAL.artist;
+$('#cap-neu').innerHTML = `${WORK.title.replace(/<\/?em>/g,'')}, <i>${WORK.year}</i>`;
+$('#cap-neu-meta').textContent = `${WORK.author} · ${WORK.medium}`;
+$('#foot-l').textContent = `${WORK.title.replace(/<\/?em>/g,'')} · ${WORK.author} · ${WORK.year} · Kunst Q1`;
+
+/* ---- Ebenen-Stapel ---- */
+const stack = $('#stack'), slider = $('#slider'), viewport = $('#viewport');
+const layerEls = LAYERS.map((L,i) => {
+  const d = document.createElement('div');
+  d.className = 'layer';
+  Object.assign(d.style, {left:L.x*100+'%', top:L.y*100+'%', width:L.w*100+'%', height:L.h*100+'%', zIndex:i});
+  d.innerHTML = `<img src="${L.file}" alt="${i===0?'Ausgangsbild':'Figur '+i}" draggable="false">`;
+  stack.appendChild(d);
+  return d;
+});
+
+const strip = $('#strip');
+const chips = LAYERS.map((L,i) => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (i===0?' bg':'');
+  b.title = (i===0?'Ausgangsbild':'Ebene '+(i+1)) + ' · ' + L.src;
+  b.innerHTML = `<span class="n">${String(i+1).padStart(2,'0')}</span><img src="${L.file}" alt="" loading="lazy">`;
+  b.onclick = () => { stop(); set(i); };
+  strip.appendChild(b);
+  return b;
+});
+$('#ticks').innerHTML = LAYERS.map(()=>'<span></span>').join('');
+
+let current = -1, explode = false, solo = false;
+function set(v){
+  v = Math.max(0, Math.min(LAYERS.length-1, v));
+  const prev = current; current = v;
+  slider.value = v;
+  slider.style.setProperty('--p', (v/(LAYERS.length-1))*100 + '%');
+  layerEls.forEach((el,i) => {
+    el.classList.toggle('off', i > v);
+    el.classList.toggle('new', i === v && v > 0 && v > prev && prev !== -1);
+    el.classList.toggle('dim', i < v && i > 0);
+    const z = explode ? (i - (LAYERS.length-1)/2) * 34 : 0;
+    el.style.transform = i > v ? `translateZ(${z}px) translateY(2.5%) scale(.97)` : `translateZ(${z}px)`;
+  });
+  chips.forEach((c,i) => c.classList.toggle('on', i <= v));
+  const people = v; // Ebene 0 = Ausgangsbild mit einer Figur
+  $('#counter').innerHTML = `Ebene <strong>${String(v+1).padStart(2,'0')}</strong> / ${LAYERS.length} &nbsp;·&nbsp; ${v===0?'Ausgangsbild':'+ '+people+(people===1?' Figur':' Figuren')}`;
+  clearTimeout(set._t);
+  set._t = setTimeout(()=>layerEls.forEach(el=>el.classList.remove('new')), 900);
+}
+slider.addEventListener('input', e => { stop(); set(+e.target.value); });
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  if (e.key==='ArrowRight'){ stop(); set(current+1); }
+  if (e.key==='ArrowLeft'){ stop(); set(current-1); }
+});
+
+/* Abspielen */
+let timer = null;
+function play(){
+  if (current >= LAYERS.length-1) set(0);
+  $('#play-txt').textContent = 'Pause';
+  $('#play-ico').innerHTML = '<path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/>';
+  timer = setInterval(() => { if (current >= LAYERS.length-1) stop(); else set(current+1); }, 650);
+}
+function stop(){
+  clearInterval(timer); timer = null;
+  $('#play-txt').textContent = 'Abspielen';
+  $('#play-ico').innerHTML = '<path d="M4 2.5v11l9-5.5z"/>';
+}
+$('#play').onclick = () => timer ? stop() : play();
+
+$('#explode').onclick = e => {
+  explode = !explode;
+  e.currentTarget.setAttribute('aria-pressed', explode);
+  viewport.classList.toggle('explode', explode);
+  set(current);
+};
+$('#solo').onclick = e => {
+  solo = !solo;
+  e.currentTarget.setAttribute('aria-pressed', solo);
+  stack.classList.toggle('solo', solo);
+};
+
+/* sanfte Neigung mit der Maus im 3D-Modus */
+viewport.addEventListener('pointermove', e => {
+  if (!explode) return;
+  const r = viewport.getBoundingClientRect();
+  const px = (e.clientX - r.left)/r.width - .5, py = (e.clientY - r.top)/r.height - .5;
+  stack.style.transform = `rotateX(${10 - py*14}deg) rotateY(${-32 + px*30}deg) scale(.74)`;
+});
+viewport.addEventListener('pointerleave', () => stack.style.transform = '');
+$('#explode').addEventListener('click', () => stack.style.transform = '');
+
+/* Intro: beim ersten Sichtbarwerden einmal aufbauen */
+set(LAYERS.length-1);
+const io = new IntersectionObserver(([en]) => {
+  if (en.isIntersecting){ io.disconnect();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches){ set(0); setTimeout(play, 500); }
+  }
+}, {threshold:.5});
+io.observe(viewport);
+
+/* ---- Wipe-Vergleich ---- */
+const wipe = $('#wipe');
+function wipeTo(e){
+  const r = wipe.getBoundingClientRect();
+  const x = Math.max(0, Math.min(1, (e.clientX - r.left)/r.width));
+  wipe.style.setProperty('--x', x*100+'%');
+}
+let dragging = false;
+wipe.addEventListener('pointerdown', e => { dragging = true; wipe.setPointerCapture(e.pointerId); wipeTo(e); });
+wipe.addEventListener('pointermove', e => { if (dragging || e.pointerType==='mouse') wipeTo(e); });
+wipe.addEventListener('pointerup', () => dragging = false);
+
+/* ---- Vergleichstabelle ---- */
+$('#cmp-table').innerHTML = [
+  ['a','Aufgegriffen',COMPARE.aufgegriffen],
+  ['b','Verändert',COMPARE.veraendert],
+  ['c','Bewusst verworfen',COMPARE.verworfen]
+].map(([c,h,items]) => `<div class="col ${c}"><h3>${h}</h3><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('');
+
+/* ---- Prozess ---- */
+const list = items => '<ul>' + items.map(it => Array.isArray(it)
+  ? `<li>${it[0]}${list(it[1])}</li>` : `<li>${it}</li>`).join('') + '</ul>';
+$('#steps').innerHTML = STEPS.map(s => {
+  const has = s.sections || s.facts || s.text || s.table || s.versus;
+  let body = '';
+  if (s.text) body += s.text.map(p => `<p class="note">${p}</p>`).join('');
+  if (s.image) body += `<figure class="pimg"><img src="${s.image.src}" alt="${s.image.cap}" loading="lazy"><figcaption>${s.image.cap}</figcaption></figure>`;
+  if (s.table) body += `<table class="altneu"><thead><tr><th class="alt">ALT</th><th class="neu">NEU</th></tr></thead><tbody>${
+    s.table.map(([a,n]) => `<tr><td>${a}</td><td>${n}</td></tr>`).join('')}</tbody></table>`;
+  if (s.after) body += `<p class="note" style="${s.table||s.image?'margin-top:22px':''}">${s.after}</p>`;
+  if (s.versus) body += `<div class="versus">${s.versus.map((v,i) =>
+    `<figure class="${v.cls}"><span class="vtag">${v.tag}</span><img src="${v.src}" alt="${v.cap}" loading="lazy">
+      <button class="zoom-btn" data-step="${s.n}" data-i="${i}" aria-label="${v.cap} vergrößern">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.5 12.5L18 18M8.5 6v5M6 8.5h5"/></svg>Zoom</button>
+      <figcaption>${v.cap}</figcaption></figure>`).join('')}</div>`;
+  if (s.facts) body += `<div class="facts">${s.facts.map(([k,v])=>`<div><span class="mono">${k}</span><span>${v}</span></div>`).join('')}</div>`;
+  if (s.sections) body += s.sections.map(([h,items]) => `<h4>${h}</h4>${list(items)}`).join('');
+  if (!has) body = `<div class="pending">Notizen folgen.</div>`;
+  return `<article class="step ${has?'done':''}">
+    <div class="num">${String(s.n).padStart(2,'0')}<small>${has?'erledigt':'offen'}</small></div>
+    <div><h3>${s.title}</h3><p class="q">${s.q}</p>${body}</div>
+  </article>`;
+}).join('');
+
+/* ---- Lightbox mit Zoom ---- */
+const lb = $('#lb'), lbView = $('#lb-view'), lbImg = $('#lb-img');
+let lbSet = [], lbIdx = 0, zs = 1, tx = 0, ty = 0;
+function lbApply(){
+  lbImg.style.setProperty('--s', zs);
+  lbImg.style.setProperty('--tx', tx+'px');
+  lbImg.style.setProperty('--ty', ty+'px');
+  lbView.classList.toggle('zoomed', zs > 1);
+}
+function clampPan(){
+  const r = lbView.getBoundingClientRect();
+  const w = lbImg.offsetWidth*zs, h = lbImg.offsetHeight*zs;
+  const mx = Math.max(0,(w-r.width)/2), my = Math.max(0,(h-r.height)/2);
+  tx = Math.max(-mx, Math.min(mx, tx)); ty = Math.max(-my, Math.min(my, ty));
+}
+function zoomTo(s, cx, cy){
+  const r = lbView.getBoundingClientRect();
+  const ox = (cx ?? r.left + r.width/2) - (r.left + r.width/2);
+  const oy = (cy ?? r.top + r.height/2) - (r.top + r.height/2);
+  const ns = Math.max(1, Math.min(6, s));
+  tx = ox - (ox - tx) * ns/zs; ty = oy - (oy - ty) * ns/zs; zs = ns;
+  if (zs === 1){ tx = 0; ty = 0; }
+  clampPan(); lbApply();
+}
+function lbShow(i){
+  lbIdx = i; const v = lbSet[i];
+  lbImg.src = v.src; lbImg.alt = v.cap;
+  $('#lb-tag').textContent = v.tag; $('#lb-tag').className = 'vtag ' + v.cls;
+  $('#lb-cap').textContent = v.cap;
+  $('#lb-swap').style.display = lbSet.length > 1 ? '' : 'none';
+}
+function lbOpen(set, i){
+  lbSet = set; zs = 1; tx = 0; ty = 0; lbApply(); lbShow(i);
+  lb.classList.add('open'); document.body.style.overflow = 'hidden'; lb.focus();
+}
+/* Buttons nach Klick entfokussieren, damit die Leertaste nicht erneut einen Button auslöst */
+lb.addEventListener('click', e => { if (e.target.closest('button')) lb.focus(); });
+function lbClose(){ lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.zoom-btn'); if (!b) return;
+  const st = STEPS.find(s => s.n == b.dataset.step);
+  lbOpen(st.versus, +b.dataset.i);
+});
+$('#lb-close').onclick = lbClose;
+$('#lb-swap').onclick = () => lbShow((lbIdx+1) % lbSet.length);   // Zoom & Ausschnitt bleiben gleich
+$('#lb-in').onclick = () => zoomTo(zs*1.6);
+$('#lb-out').onclick = () => zoomTo(zs/1.6);
+lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') lbClose();
+  else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowLeft'){ e.preventDefault(); e.stopImmediatePropagation(); lbShow((lbIdx+1) % lbSet.length); }
+  else if (e.key === '+' || e.key === '=') zoomTo(zs*1.6);
+  else if (e.key === '-') zoomTo(zs/1.6);
+}, true);
+lbView.addEventListener('wheel', e => { e.preventDefault(); zoomTo(zs * (e.deltaY < 0 ? 1.2 : 1/1.2), e.clientX, e.clientY); }, {passive:false});
+
+let drag = null, moved = false;
+lbView.addEventListener('pointerdown', e => {
+  drag = {x:e.clientX, y:e.clientY, tx, ty}; moved = false;
+  lbView.setPointerCapture(e.pointerId);
+});
+lbView.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+  if (moved && zs > 1){ lbView.classList.add('dragging'); tx = drag.tx + dx; ty = drag.ty + dy; clampPan(); lbApply(); }
+});
+lbView.addEventListener('pointerup', e => {
+  lbView.classList.remove('dragging');
+  if (drag && !moved) zs > 1 ? zoomTo(1) : zoomTo(2.5, e.clientX, e.clientY);
+  drag = null;
+});
+</script>
+</body>
+</html>
