@@ -161,7 +161,7 @@ section.block{padding:88px 0;border-top:var(--b)}
 .col li b{font-weight:700}
 
 .steps{display:flex;flex-direction:column;gap:28px}
-.step{display:grid;grid-template-columns:180px 1fr;gap:0;border:var(--b);background:var(--paper);box-shadow:var(--sh)}
+.step{display:grid;grid-template-columns:180px minmax(0,1fr);gap:0;border:var(--b);background:var(--paper);box-shadow:var(--sh)}
 .step > div:last-child{padding:24px 28px}
 .step .num{font-family:var(--display);font-size:64px;line-height:1;padding:22px;border-right:var(--b);background:#e9e1cf}
 .step.done .num{background:var(--yellow)}
@@ -186,6 +186,8 @@ section.block{padding:88px 0;border-top:var(--b)}
 .altneu th{font:400 14px var(--display);text-align:left;padding:8px 14px;border:var(--b)}
 .altneu th.alt{background:var(--green)} .altneu th.neu{background:var(--yellow)}
 .altneu td{padding:10px 14px;border:var(--b);vertical-align:top;width:50%}
+.pimg img,.versus img{display:block;width:100%;height:auto}
+.step > div{min-width:0}
 .pimg{margin:0 0 20px;border:var(--b);box-shadow:var(--sh-sm);background:var(--ink)}
 .pimg figcaption,.versus figcaption{background:var(--paper);border-top:var(--b);padding:6px 12px;font:700 13px var(--mono);text-transform:uppercase}
 .versus{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -226,7 +228,7 @@ footer a:hover{transform:translate(4px,4px);box-shadow:0 0 0 var(--paper)}
 
 @media (max-width:860px){
   .sec-head{grid-template-columns:1fr;gap:12px}
-  .step{grid-template-columns:1fr}
+  .step{grid-template-columns:minmax(0,1fr)}
   .step .num{border-right:none;border-bottom:var(--b);font-size:44px;display:flex;align-items:center;gap:14px;padding:14px 20px}
   .step .num small{margin-top:0}
   .step > div:last-child{padding:20px}
@@ -239,6 +241,14 @@ footer a:hover{transform:translate(4px,4px);box-shadow:0 0 0 var(--paper)}
 @media (max-width:480px){
   .wrap{padding:0 16px}
   .viewport,.wipe{box-shadow:6px 6px 0 var(--ink)}
+  .step{box-shadow:6px 6px 0 var(--ink)}
+  .hero h1{font-size:min(40px,10.4vw)}
+  .step > div:last-child{padding:16px 14px}
+  .step h3{font-size:21px}
+  .note{font-size:15.5px;padding-left:12px;border-left-width:5px}
+  .note a{white-space:normal}
+  .altneu th,.altneu td{padding:7px 8px;font-size:14px;overflow-wrap:anywhere}
+  .versus figcaption,.pimg figcaption{font-size:11.5px;padding:5px 9px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
