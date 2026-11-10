@@ -180,6 +180,8 @@ section.block{padding:88px 0;border-top:var(--b)}
 .facts div span:last-child{font-weight:700}
 .facts .mono{font-size:11px}
 .note{margin:0 0 14px;max-width:720px;font-size:17px;padding-left:16px;border-left:6px solid var(--yellow)}
+.note a{color:var(--ink);font-weight:700;text-decoration:none;background:var(--yellow);border:2px solid var(--ink);padding:0 5px;box-shadow:2px 2px 0 var(--ink);white-space:nowrap}
+.note a:hover{background:var(--green);box-shadow:0 0 0 var(--ink);transform:translate(2px,2px);display:inline-block}
 .altneu{width:100%;border-collapse:collapse;border:var(--b);box-shadow:var(--sh-sm);background:var(--paper)}
 .altneu th{font:400 14px var(--display);text-align:left;padding:8px 14px;border:var(--b)}
 .altneu th.alt{background:var(--green)} .altneu th.neu{background:var(--yellow)}
@@ -528,6 +530,11 @@ const STEPS = [
   {
     n:6, title:'Auswählen & bearbeiten',
     q:'Stärkste Aufnahme wählen und gezielt bearbeiten: Montage der 12 Ebenen in GIMP.',
+    text:[
+      'Aus den einzelnen Aufnahmen habe ich mich mit <a href="https://github.com/danielgatis/rembg" target="_blank" rel="noopener">rembg</a> ausgeschnitten, einer KI, die lokal auf meinem Computer läuft.',
+      'Danach habe ich die freigestellten Figuren in <a href="https://www.gimp.org/" target="_blank" rel="noopener">GIMP</a> als 12 Ebenen übereinandergelegt und zur Menge arrangiert. Wie die Ebenen Schritt für Schritt aufeinander aufbauen, zeigt der Regler <a href="#werk">oben beim Werk ↑</a>.'
+    ],
+    image:{src:'assets/process/gimp-ebenen.jpg', cap:'Arrangement in GIMP · 12 Ebenen'},
     after:'Beim Freistellen war in der alten Version noch ein Stück einer Hand zu sehen.',
     versus:[
       {src:'assets/process/freistellung-alt.jpg', tag:'Alt', cls:'c', cap:'Mit Rest einer Hand'},
